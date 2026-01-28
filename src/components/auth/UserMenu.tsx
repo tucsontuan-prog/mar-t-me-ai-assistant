@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, MessageSquare, Settings, Database } from "lucide-react";
+import { User, LogOut, MessageSquare, Settings, Database, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -62,7 +62,11 @@ export const UserMenu = () => {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2">
           <Settings className="w-4 h-4" />
-          Quản lý Knowledge
+          Quản lý Q&A
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/knowledge-docs")} className="gap-2">
+          <FileText className="w-4 h-4" />
+          Tài liệu Knowledge
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate("/seed-data")} className="gap-2">
           <Database className="w-4 h-4" />

@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import SeedData from "./pages/SeedData";
 import Admin from "./pages/Admin";
+import KnowledgeDocs from "./pages/KnowledgeDocs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/seed-data" element={<SeedData />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/knowledge-docs" element={<KnowledgeDocs />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

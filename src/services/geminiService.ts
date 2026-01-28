@@ -1,6 +1,7 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from "firebase/app";
 import { searchKnowledgeBase } from "./chatService";
+import { buildKnowledgeContext } from "./knowledgeDocService";
 
 interface GeminiResponse {
   response: string;
@@ -22,15 +23,17 @@ export const sendMessageToGemini = async (
   userMessage: string
 ): Promise<string> => {
   try {
-    // Search knowledge base for context
+    // Get full-text knowledge documents
+    const fullTextContext = await buildKnowledgeContext();
+    
+    // Also search Q&A knowledge base for specific matches
     const knowledgeMatch = await searchKnowledgeBase(userMessage);
     
-    let knowledgeContext = "";
+    let knowledgeContext = fullTextContext;
+    
+    // Add Q&A match if found
     if (knowledgeMatch) {
-      knowledgeContext = `
-Câu hỏi liên quan: ${knowledgeMatch.question}
-Câu trả lời: ${knowledgeMatch.answer}
-`;
+      knowledgeContext += `\n\n=== Câu hỏi liên quan ===\nCâu hỏi: ${knowledgeMatch.question}\nCâu trả lời: ${knowledgeMatch.answer}`;
     }
 
     // Call Firebase Cloud Function
