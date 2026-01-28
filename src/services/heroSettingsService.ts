@@ -44,6 +44,7 @@ const DEFAULT_SETTINGS: HeroSettings = {
     { id: "2", icon: "Clock", text_vi: "Hoạt động 24/7", text_en: "Available 24/7" },
     { id: "3", icon: "Ship", text_vi: "Tra cứu lịch tàu", text_en: "Vessel schedules" },
     { id: "4", icon: "Container", text_vi: "Theo dõi container", text_en: "Track containers" },
+    { id: "5", icon: "Globe", text_vi: "Hỗ trợ đa ngôn ngữ", text_en: "Multi-language support" },
   ],
 };
 
