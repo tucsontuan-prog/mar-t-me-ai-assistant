@@ -5,6 +5,10 @@ import { ChatInput } from "./ChatInput";
 import { TypingIndicator } from "./TypingIndicator";
 import { QuickActions } from "./QuickActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAuth } from "@/hooks/useAuth";
+import { sendMessageToGemini } from "@/services/geminiService";
+import { saveChatMessage, getChatHistory } from "@/services/chatService";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -26,6 +30,7 @@ export const ChatWindow = ({
   showControls = false,
   embedded = false,
 }: ChatWindowProps) => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -37,6 +42,32 @@ export const ChatWindow = ({
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Load chat history when user logs in
+  useEffect(() => {
+    const loadHistory = async () => {
+      if (user) {
+        try {
+          const history = await getChatHistory(user.uid);
+          if (history.length > 0) {
+            setMessages([
+              {
+                id: "welcome",
+                content:
+                  "Xin chào! 👋 Tôi là trợ lý ảo hỗ trợ vận tải biển. Tôi có thể giúp bạn tra cứu lịch tàu, theo dõi container, và giải đáp các thắc mắc về dịch vụ. Bạn cần hỗ trợ gì?",
+                isBot: true,
+                timestamp: new Date(),
+              },
+              ...history,
+            ]);
+          }
+        } catch (error) {
+          console.error("Failed to load chat history:", error);
+        }
+      }
+    };
+    loadHistory();
+  }, [user]);
 
   // Auto scroll to bottom when new message
   useEffect(() => {
@@ -56,18 +87,48 @@ export const ChatWindow = ({
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate bot response (will be replaced with actual API call)
-    setTimeout(() => {
+    try {
+      // Save user message to Firestore
+      if (user) {
+        await saveChatMessage(user.uid, {
+          content,
+          isBot: false,
+        });
+      }
+
+      // Call Gemini via Firebase Cloud Function
+      const response = await sendMessageToGemini(content);
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content:
-          "Cảm ơn bạn đã liên hệ! Hiện tại tôi đang được cấu hình để kết nối với dữ liệu của bạn. Vui lòng cung cấp API key Gemini và cấu hình Firebase để tôi có thể hỗ trợ bạn tốt hơn.",
+        content: response,
         isBot: true,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botMessage]);
+
+      // Save bot response to Firestore
+      if (user) {
+        await saveChatMessage(user.uid, {
+          content: response,
+          isBot: true,
+        });
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Có lỗi xảy ra");
+      
+      // Fallback response
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content:
+          "Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng kiểm tra:\n\n1. Bạn đã đăng nhập chưa?\n2. Firebase Cloud Function đã được deploy chưa?\n3. Gemini API key đã được cấu hình đúng chưa?",
+        isBot: true,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const showQuickActions = messages.length <= 1;
