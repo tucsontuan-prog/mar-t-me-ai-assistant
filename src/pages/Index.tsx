@@ -3,8 +3,11 @@ import { ChatWindow } from "@/components/chat/ChatWindow";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Index = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Sticky Header */}
@@ -36,18 +39,17 @@ const Index = () => {
                 <div className="flex items-center gap-2 text-ocean-light">
                   <Anchor className="w-5 h-5" />
                   <span className="text-sm font-medium uppercase tracking-wider">
-                    HAIAN Chatbot
+                    {t("hero.badge")}
                   </span>
                 </div>
                 
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                  Xin chào! Tôi có thể{" "}
-                  <span className="text-ocean-teal">giúp gì cho bạn?</span>
+                  {t("hero.title")}{" "}
+                  <span className="text-ocean-teal">{t("hero.titleHighlight")}</span>
                 </h1>
                 
                 <p className="text-lg text-white/80 max-w-xl">
-                  Trợ lý ảo HAIAN sẵn sàng hỗ trợ bạn 24/7. Hãy đặt câu hỏi về 
-                  dịch vụ vận tải, lịch tàu, tra cứu container và nhiều hơn nữa.
+                  {t("hero.description")}
                 </p>
 
                 {/* Customer-focused features */}
@@ -56,25 +58,25 @@ const Index = () => {
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <MessageCircle className="w-5 h-5 text-ocean-teal" />
                     </div>
-                    <span className="text-sm">Trả lời tức thì</span>
+                    <span className="text-sm">{t("hero.feature1")}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-ocean-teal" />
                     </div>
-                    <span className="text-sm">Hoạt động 24/7</span>
+                    <span className="text-sm">{t("hero.feature2")}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <Ship className="w-5 h-5 text-ocean-teal" />
                     </div>
-                    <span className="text-sm">Tra cứu lịch tàu</span>
+                    <span className="text-sm">{t("hero.feature3")}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <Container className="w-5 h-5 text-ocean-teal" />
                     </div>
-                    <span className="text-sm">Theo dõi container</span>
+                    <span className="text-sm">{t("hero.feature4")}</span>
                   </div>
                 </div>
               </div>
@@ -100,11 +102,10 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                Chúng tôi có thể hỗ trợ bạn
+                {t("services.title")}
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Trợ lý ảo HAIAN được thiết kế để giải đáp mọi thắc mắc của bạn 
-                về dịch vụ vận tải biển một cách nhanh chóng và chính xác.
+                {t("services.description")}
               </p>
             </div>
 
@@ -115,11 +116,10 @@ const Index = () => {
                   <Ship className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Thông tin lịch tàu
+                  {t("services.schedule.title")}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Tra cứu lịch trình tàu, thời gian khởi hành và cập cảng 
-                  trên các tuyến nội địa và quốc tế.
+                  {t("services.schedule.desc")}
                 </p>
               </article>
 
@@ -129,11 +129,10 @@ const Index = () => {
                   <Container className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Theo dõi container
+                  {t("services.container.title")}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Kiểm tra trạng thái và vị trí container của bạn 
-                  theo thời gian thực.
+                  {t("services.container.desc")}
                 </p>
               </article>
 
@@ -143,11 +142,10 @@ const Index = () => {
                   <Headphones className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Hỗ trợ khách hàng
+                  {t("services.support.title")}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Giải đáp thắc mắc về dịch vụ, báo giá và 
-                  các thông tin liên quan khác.
+                  {t("services.support.desc")}
                 </p>
               </article>
             </div>
@@ -162,15 +160,14 @@ const Index = () => {
                 <MessageCircle className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Bắt đầu trò chuyện ngay
+                {t("cta.title")}
               </h2>
               <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-                Nhấn vào biểu tượng chat ở góc phải màn hình để bắt đầu 
-                trò chuyện với trợ lý ảo HAIAN.
+                {t("cta.description")}
               </p>
               <div className="flex items-center justify-center gap-2 text-sm text-ocean-teal">
                 <Globe className="w-4 h-4" />
-                <span>Hỗ trợ tiếng Việt và tiếng Anh</span>
+                <span>{t("cta.languages")}</span>
               </div>
             </div>
           </div>

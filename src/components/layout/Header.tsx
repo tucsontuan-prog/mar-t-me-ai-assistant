@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/hooks/useLanguage";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
+  const { t } = useLanguage();
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
       <div className="container mx-auto px-4">
@@ -15,21 +19,24 @@ const Header = () => {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-4 md:gap-6">
             <Link
               to="/"
-              className="text-foreground hover:text-ocean-teal transition-colors font-medium text-sm"
+              className="hidden sm:block text-foreground hover:text-ocean-teal transition-colors font-medium text-sm"
             >
-              Trang chủ
+              {t("nav.home")}
             </Link>
             <a
               href="https://haiants.vn"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground hover:text-ocean-teal transition-colors font-medium text-sm"
+              className="hidden sm:block text-foreground hover:text-ocean-teal transition-colors font-medium text-sm"
             >
-              Website chính
+              {t("nav.website")}
             </a>
+            
+            {/* Language Switcher */}
+            <LanguageSwitcher />
           </nav>
         </div>
       </div>
