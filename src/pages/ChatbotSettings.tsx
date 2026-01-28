@@ -23,13 +23,45 @@ import {
   RotateCcw,
   MessageSquare,
   Settings2,
+  Brain,
+  Ship,
+  Container,
+  Globe,
+  HelpCircle,
+  Search,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Calendar,
+  FileText,
+  Package,
 } from "lucide-react";
 import { toast } from "sonner";
 
 const ICON_OPTIONS = [
-  "Ship", "Container", "Globe", "HelpCircle", "Search", "Phone", 
-  "Mail", "MapPin", "Clock", "Calendar", "FileText", "Package"
+  { name: "Ship", icon: Ship },
+  { name: "Container", icon: Container },
+  { name: "Globe", icon: Globe },
+  { name: "HelpCircle", icon: HelpCircle },
+  { name: "Search", icon: Search },
+  { name: "Phone", icon: Phone },
+  { name: "Mail", icon: Mail },
+  { name: "MapPin", icon: MapPin },
+  { name: "Clock", icon: Clock },
+  { name: "Calendar", icon: Calendar },
+  { name: "FileText", icon: FileText },
+  { name: "Package", icon: Package },
 ];
+
+const getIconComponent = (iconName: string) => {
+  const found = ICON_OPTIONS.find((opt) => opt.name === iconName);
+  if (found) {
+    const IconComponent = found.icon;
+    return <IconComponent className="w-4 h-4" />;
+  }
+  return <HelpCircle className="w-4 h-4" />;
+};
 
 const ChatbotSettingsPage = () => {
   const navigate = useNavigate();
@@ -151,8 +183,12 @@ const ChatbotSettingsPage = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="messages" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs defaultValue="system" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="system" className="gap-2">
+              <Brain className="w-4 h-4" />
+              System Instruction
+            </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageSquare className="w-4 h-4" />
               Nội dung tin nhắn
@@ -162,6 +198,35 @@ const ChatbotSettingsPage = () => {
               Câu hỏi gợi ý
             </TabsTrigger>
           </TabsList>
+
+          {/* System Instruction Tab */}
+          <TabsContent value="system" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-ocean-teal" />
+                  System Instruction
+                </CardTitle>
+                <CardDescription>
+                  Hướng dẫn cho AI về cách trả lời và xử lý câu hỏi của khách hàng.
+                  Đây là prompt sẽ được gửi đến AI mỗi khi có cuộc hội thoại mới.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  value={settings.systemInstruction}
+                  onChange={(e) => setSettings({ ...settings, systemInstruction: e.target.value })}
+                  rows={10}
+                  placeholder="Nhập hướng dẫn cho AI..."
+                  className="font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Gợi ý: Mô tả vai trò của AI, phong cách trả lời, các thông tin quan trọng về công ty, 
+                  và những điều AI nên/không nên làm.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Messages Tab */}
           <TabsContent value="messages" className="space-y-6">
@@ -281,15 +346,26 @@ const ChatbotSettingsPage = () => {
                     <div className="grid grid-cols-3 gap-3">
                       <div className="space-y-2">
                         <Label className="text-xs">Icon</Label>
-                        <select
-                          value={action.icon}
-                          onChange={(e) => updateQuickAction(index, "icon", e.target.value)}
-                          className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm"
-                        >
-                          {ICON_OPTIONS.map((icon) => (
-                            <option key={icon} value={icon}>{icon}</option>
-                          ))}
-                        </select>
+                        <div className="flex flex-wrap gap-1 p-2 border rounded-md bg-background">
+                          {ICON_OPTIONS.map((opt) => {
+                            const IconComp = opt.icon;
+                            return (
+                              <button
+                                key={opt.name}
+                                type="button"
+                                onClick={() => updateQuickAction(index, "icon", opt.name)}
+                                className={`p-2 rounded-md transition-colors ${
+                                  action.icon === opt.name
+                                    ? "bg-ocean-teal text-white"
+                                    : "hover:bg-muted"
+                                }`}
+                                title={opt.name}
+                              >
+                                <IconComp className="w-4 h-4" />
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs">Nhãn (VI)</Label>
