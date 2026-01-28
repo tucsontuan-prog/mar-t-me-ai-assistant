@@ -2,15 +2,9 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Anchor, Ship, Container, Globe, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
 
 const Index = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Sticky Header */}
@@ -47,17 +41,29 @@ const Index = () => {
                 </div>
                 
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                  Trợ lý AI thông minh cho{" "}
-                  <span className="text-ocean-teal">Vận tải biển</span>
+                  Xin chào! Tôi có thể{" "}
+                  <span className="text-ocean-teal">giúp gì cho bạn?</span>
                 </h1>
                 
                 <p className="text-lg text-white/80 max-w-xl">
-                  Chatbot hỗ trợ 24/7, trả lời chính xác dựa trên dữ liệu của bạn. 
-                  Tích hợp dễ dàng vào website, sử dụng công nghệ AI Gemini tiên tiến.
+                  Trợ lý ảo HAIAN sẵn sàng hỗ trợ bạn 24/7. Hãy đặt câu hỏi về 
+                  dịch vụ vận tải, lịch tàu, tra cứu container và nhiều hơn nữa.
                 </p>
 
-                {/* Features */}
+                {/* Customer-focused features */}
                 <div className="grid grid-cols-2 gap-4 pt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                      <MessageCircle className="w-5 h-5 text-ocean-teal" />
+                    </div>
+                    <span className="text-sm">Trả lời tức thì</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-ocean-teal" />
+                    </div>
+                    <span className="text-sm">Hoạt động 24/7</span>
+                  </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <Ship className="w-5 h-5 text-ocean-teal" />
@@ -68,30 +74,9 @@ const Index = () => {
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <Container className="w-5 h-5 text-ocean-teal" />
                     </div>
-                    <span className="text-sm">Tracking container</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Globe className="w-5 h-5 text-ocean-teal" />
-                    </div>
-                    <span className="text-sm">Tuyến đường quốc tế</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Anchor className="w-5 h-5 text-ocean-teal" />
-                    </div>
-                    <span className="text-sm">Hỗ trợ 24/7</span>
+                    <span className="text-sm">Theo dõi container</span>
                   </div>
                 </div>
-
-                <Button
-                  size="lg"
-                  className="mt-6 bg-ocean-teal hover:bg-ocean-teal/90 text-white gap-2"
-                  onClick={() => navigate(user ? "/" : "/auth")}
-                >
-                  {user ? "Bắt đầu chat" : "Đăng nhập để dùng thử"}
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
               </div>
 
               {/* Right - Chat preview */}
@@ -110,101 +95,82 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Services Section - Customer focused */}
         <section className="py-16 lg:py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                Tính năng nổi bật
+                Chúng tôi có thể hỗ trợ bạn
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Chatbot được thiết kế riêng cho ngành vận tải biển, 
-                tích hợp dữ liệu của bạn và trả lời chính xác theo ngữ cảnh.
+                Trợ lý ảo HAIAN được thiết kế để giải đáp mọi thắc mắc của bạn 
+                về dịch vụ vận tải biển một cách nhanh chóng và chính xác.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              {/* Feature 1 */}
-              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow">
-                <div className="w-12 h-12 rounded-lg bg-ocean-foam flex items-center justify-center mb-4">
-                  <Ship className="w-6 h-6 text-ocean-teal" />
+              {/* Service 1 */}
+              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow text-center">
+                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                  <Ship className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Dữ liệu tùy chỉnh
+                  Thông tin lịch tàu
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Chỉ trả lời dựa trên dữ liệu bạn cung cấp, đảm bảo thông tin 
-                  chính xác và phù hợp với doanh nghiệp.
+                  Tra cứu lịch trình tàu, thời gian khởi hành và cập cảng 
+                  trên các tuyến nội địa và quốc tế.
                 </p>
               </article>
 
-              {/* Feature 2 */}
-              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow">
-                <div className="w-12 h-12 rounded-lg bg-ocean-foam flex items-center justify-center mb-4">
-                  <Container className="w-6 h-6 text-ocean-teal" />
+              {/* Service 2 */}
+              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow text-center">
+                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                  <Container className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Xác thực Firebase
+                  Theo dõi container
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Bảo mật với Firebase Authentication, quản lý người dùng 
-                  và phân quyền truy cập dữ liệu.
+                  Kiểm tra trạng thái và vị trí container của bạn 
+                  theo thời gian thực.
                 </p>
               </article>
 
-              {/* Feature 3 */}
-              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow">
-                <div className="w-12 h-12 rounded-lg bg-ocean-foam flex items-center justify-center mb-4">
-                  <Globe className="w-6 h-6 text-ocean-teal" />
+              {/* Service 3 */}
+              <article className="p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium transition-shadow text-center">
+                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                  <Headphones className="w-8 h-8 text-ocean-teal" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Nhúng dễ dàng
+                  Hỗ trợ khách hàng
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Widget chatbot có thể nhúng vào bất kỳ website nào, 
-                  tùy chỉnh giao diện phù hợp thương hiệu.
+                  Giải đáp thắc mắc về dịch vụ, báo giá và 
+                  các thông tin liên quan khác.
                 </p>
               </article>
             </div>
           </div>
         </section>
 
-        {/* Embed Section */}
+        {/* CTA Section */}
         <section className="py-16 lg:py-20 bg-muted/50">
           <div className="container mx-auto px-4">
-            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-soft border border-border">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    Nhúng chatbot vào website của bạn
-                  </h2>
-                  <p className="text-muted-foreground mb-6">
-                    Chỉ cần một đoạn mã ngắn, chatbot sẽ xuất hiện trên website 
-                    của bạn và sẵn sàng hỗ trợ khách hàng.
-                  </p>
-                  
-                  {/* Code snippet */}
-                  <div className="bg-ocean-deep rounded-lg p-4 font-mono text-sm text-white overflow-x-auto">
-                    <code>
-                      {`<script src="https://haiants.vn/chatbot.js"></script>`}
-                    </code>
-                  </div>
-                </div>
-                
-                <div className="flex justify-center">
-                  <div className="relative w-[300px] h-[400px] bg-background rounded-xl shadow-medium border border-border p-4">
-                    <div className="w-full h-full bg-muted rounded-lg flex items-center justify-center">
-                      <span className="text-muted-foreground text-sm">
-                        Your Website
-                      </span>
-                    </div>
-                    
-                    {/* Mini widget preview */}
-                    <div className="absolute bottom-2 right-2 w-12 h-12 rounded-full ocean-gradient shadow-medium flex items-center justify-center">
-                      <Ship className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                </div>
+            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-soft border border-border text-center">
+              <div className="w-20 h-20 rounded-full ocean-gradient flex items-center justify-center mx-auto mb-6">
+                <MessageCircle className="w-10 h-10 text-white" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Bắt đầu trò chuyện ngay
+              </h2>
+              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+                Nhấn vào biểu tượng chat ở góc phải màn hình để bắt đầu 
+                trò chuyện với trợ lý ảo HAIAN.
+              </p>
+              <div className="flex items-center justify-center gap-2 text-sm text-ocean-teal">
+                <Globe className="w-4 h-4" />
+                <span>Hỗ trợ tiếng Việt và tiếng Anh</span>
               </div>
             </div>
           </div>

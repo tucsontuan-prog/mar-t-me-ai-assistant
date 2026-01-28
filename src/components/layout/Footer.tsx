@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Mail, Phone, Globe, MapPin, Users, Eye } from "lucide-react";
 
 const Footer = () => {
@@ -41,7 +42,7 @@ const Footer = () => {
             <img
               src="https://portal.haiants.vn/images/logo-footer.png"
               alt="HAIAN Logo Footer"
-              className="h-16 w-auto object-contain mb-4"
+              className="h-12 w-auto object-contain mb-4"
             />
             <div>
               <p className="font-bold text-lg text-white">
@@ -144,10 +145,19 @@ const Footer = () => {
       {/* Copyright Bar */}
       <div className="bg-ocean-navy border-t border-white/10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-white/60">
-            <span>© 2026 HAIAN TS. All rights reserved.</span>
-            <span className="hidden md:inline">|</span>
-            <span>Developed by HATS IT Department</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-sm text-white/60">
+            <div className="flex flex-col md:flex-row items-center gap-2">
+              <span>© 2026 HAIAN TS. All rights reserved.</span>
+              <span className="hidden md:inline">|</span>
+              <span>Developed by HATS IT Department</span>
+            </div>
+            {/* Subtle admin login link */}
+            <Link
+              to="/auth"
+              className="text-white/30 hover:text-white/50 transition-colors text-xs"
+            >
+              Admin
+            </Link>
           </div>
         </div>
       </div>
