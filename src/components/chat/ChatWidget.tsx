@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { Ship, X } from "lucide-react";
 import { ChatWindow } from "./ChatWindow";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +50,7 @@ export const ChatWidget = ({ position = "bottom-right" }: ChatWidgetProps) => {
         {isOpen && !isMinimized ? (
           <X className="w-6 h-6" />
         ) : (
-          <MessageCircle className="w-6 h-6" />
+          <Ship className="w-6 h-6" />
         )}
       </button>
     </div>
