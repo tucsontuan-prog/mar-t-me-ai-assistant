@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, MessageSquare } from "lucide-react";
+import { User, LogOut, MessageSquare, Settings, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -59,6 +59,14 @@ export const UserMenu = () => {
         <DropdownMenuItem onClick={() => navigate("/")} className="gap-2">
           <MessageSquare className="w-4 h-4" />
           Chat
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2">
+          <Settings className="w-4 h-4" />
+          Quản lý Knowledge
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/seed-data")} className="gap-2">
+          <Database className="w-4 h-4" />
+          Seed Data
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="gap-2 text-destructive">
