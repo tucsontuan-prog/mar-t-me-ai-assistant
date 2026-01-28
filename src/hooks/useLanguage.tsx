@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+// Language Context for i18n support
+import { createContext, useContext, useState, ReactNode } from "react";
 
 type Language = "vi" | "en";
 
