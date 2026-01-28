@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getHeroSettings, saveHeroSettings, HeroSettings as HeroSettingsType, HeroFeature } from "@/services/heroSettingsService";
+import { AutoTranslateButton } from "@/components/admin/AutoTranslateButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,6 @@ import {
   Loader2,
   Plus,
   Trash2,
-  RotateCcw,
   MessageCircle,
   Clock,
   Ship,
@@ -31,6 +31,7 @@ import {
   Zap,
   Shield,
   CheckCircle,
+  Languages,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -168,20 +169,39 @@ const HeroSettingsPage = () => {
         {/* Hero Content */}
         <Card>
           <CardHeader>
-            <CardTitle>Nội dung Hero</CardTitle>
-            <CardDescription>Tiêu đề và mô tả hiển thị trên banner chính</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Nội dung Hero</CardTitle>
+                <CardDescription>Tiêu đề và mô tả hiển thị trên banner chính</CardDescription>
+              </div>
+              <AutoTranslateButton
+                sourceText={`${settings.badge_vi}|${settings.title_vi}|${settings.titleHighlight_vi}|${settings.description_vi}`}
+                onTranslated={(translations) => {
+                  const parts = translations.en?.split("|") || [];
+                  if (parts.length >= 4) {
+                    setSettings({
+                      ...settings,
+                      badge_en: parts[0].trim(),
+                      title_en: parts[1].trim(),
+                      titleHighlight_en: parts[2].trim(),
+                      description_en: parts[3].trim(),
+                    });
+                  }
+                }}
+              />
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Badge (Tiếng Việt)</Label>
+                <Label>Badge (Tiếng Việt) 🇻🇳</Label>
                 <Input
                   value={settings.badge_vi}
                   onChange={(e) => setSettings({ ...settings, badge_vi: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Badge (English)</Label>
+                <Label>Badge (English) 🇬🇧</Label>
                 <Input
                   value={settings.badge_en}
                   onChange={(e) => setSettings({ ...settings, badge_en: e.target.value })}
@@ -191,14 +211,14 @@ const HeroSettingsPage = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Tiêu đề (Tiếng Việt)</Label>
+                <Label>Tiêu đề (Tiếng Việt) 🇻🇳</Label>
                 <Input
                   value={settings.title_vi}
                   onChange={(e) => setSettings({ ...settings, title_vi: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Tiêu đề (English)</Label>
+                <Label>Tiêu đề (English) 🇬🇧</Label>
                 <Input
                   value={settings.title_en}
                   onChange={(e) => setSettings({ ...settings, title_en: e.target.value })}
@@ -208,14 +228,14 @@ const HeroSettingsPage = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Highlight (Tiếng Việt)</Label>
+                <Label>Highlight (Tiếng Việt) 🇻🇳</Label>
                 <Input
                   value={settings.titleHighlight_vi}
                   onChange={(e) => setSettings({ ...settings, titleHighlight_vi: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Highlight (English)</Label>
+                <Label>Highlight (English) 🇬🇧</Label>
                 <Input
                   value={settings.titleHighlight_en}
                   onChange={(e) => setSettings({ ...settings, titleHighlight_en: e.target.value })}
@@ -225,7 +245,7 @@ const HeroSettingsPage = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Mô tả (Tiếng Việt)</Label>
+                <Label>Mô tả (Tiếng Việt) 🇻🇳</Label>
                 <Textarea
                   value={settings.description_vi}
                   onChange={(e) => setSettings({ ...settings, description_vi: e.target.value })}
@@ -233,7 +253,7 @@ const HeroSettingsPage = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Mô tả (English)</Label>
+                <Label>Mô tả (English) 🇬🇧</Label>
                 <Textarea
                   value={settings.description_en}
                   onChange={(e) => setSettings({ ...settings, description_en: e.target.value })}
@@ -265,14 +285,23 @@ const HeroSettingsPage = () => {
                   <span className="font-medium text-sm text-muted-foreground">
                     Tính năng #{index + 1}
                   </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
-                    onClick={() => removeFeature(index)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <AutoTranslateButton
+                      sourceText={feature.text_vi}
+                      size="sm"
+                      onTranslated={(translations) => {
+                        updateFeature(index, "text_en", translations.en || feature.text_en);
+                      }}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      onClick={() => removeFeature(index)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -301,14 +330,14 @@ const HeroSettingsPage = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label className="text-xs">Text (Tiếng Việt)</Label>
+                    <Label className="text-xs">Text (Tiếng Việt) 🇻🇳</Label>
                     <Input
                       value={feature.text_vi}
                       onChange={(e) => updateFeature(index, "text_vi", e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs">Text (English)</Label>
+                    <Label className="text-xs">Text (English) 🇬🇧</Label>
                     <Input
                       value={feature.text_en}
                       onChange={(e) => updateFeature(index, "text_en", e.target.value)}
