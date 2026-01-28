@@ -8,6 +8,7 @@ import {
   ChatbotSettings,
   QuickAction,
 } from "@/services/chatbotSettingsService";
+import { AutoTranslateButton } from "@/components/admin/AutoTranslateButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,6 +37,7 @@ import {
   Calendar,
   FileText,
   Package,
+  Languages,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -232,8 +234,21 @@ const ChatbotSettingsPage = () => {
           <TabsContent value="messages" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Thông tin Header</CardTitle>
-                <CardDescription>Tên và trạng thái hiển thị trên đầu chat</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Thông tin Header</CardTitle>
+                    <CardDescription>Tên và trạng thái hiển thị trên đầu chat</CardDescription>
+                  </div>
+                  <AutoTranslateButton
+                    sourceText={settings.statusText_vi}
+                    onTranslated={(translations) => {
+                      setSettings({
+                        ...settings,
+                        statusText_en: translations.en || settings.statusText_en,
+                      });
+                    }}
+                  />
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -245,14 +260,14 @@ const ChatbotSettingsPage = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Trạng thái (Tiếng Việt)</Label>
+                    <Label>Trạng thái (Tiếng Việt) 🇻🇳</Label>
                     <Input
                       value={settings.statusText_vi}
                       onChange={(e) => setSettings({ ...settings, statusText_vi: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Trạng thái (English)</Label>
+                    <Label>Trạng thái (English) 🇬🇧</Label>
                     <Input
                       value={settings.statusText_en}
                       onChange={(e) => setSettings({ ...settings, statusText_en: e.target.value })}
@@ -264,12 +279,25 @@ const ChatbotSettingsPage = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Tin nhắn chào mừng</CardTitle>
-                <CardDescription>Tin nhắn đầu tiên khi khách hàng mở chatbot</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Tin nhắn chào mừng</CardTitle>
+                    <CardDescription>Tin nhắn đầu tiên khi khách hàng mở chatbot</CardDescription>
+                  </div>
+                  <AutoTranslateButton
+                    sourceText={settings.welcomeMessage_vi}
+                    onTranslated={(translations) => {
+                      setSettings({
+                        ...settings,
+                        welcomeMessage_en: translations.en || settings.welcomeMessage_en,
+                      });
+                    }}
+                  />
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Tiếng Việt 🇻🇳</Label>
+                  <Label>Tiếng Việt 🇻🇳 (Nguồn)</Label>
                   <Textarea
                     value={settings.welcomeMessage_vi}
                     onChange={(e) => setSettings({ ...settings, welcomeMessage_vi: e.target.value })}
@@ -289,12 +317,25 @@ const ChatbotSettingsPage = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Placeholder ô nhập</CardTitle>
-                <CardDescription>Gợi ý hiển thị trong ô nhập tin nhắn</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Placeholder ô nhập</CardTitle>
+                    <CardDescription>Gợi ý hiển thị trong ô nhập tin nhắn</CardDescription>
+                  </div>
+                  <AutoTranslateButton
+                    sourceText={settings.placeholder_vi}
+                    onTranslated={(translations) => {
+                      setSettings({
+                        ...settings,
+                        placeholder_en: translations.en || settings.placeholder_en,
+                      });
+                    }}
+                  />
+                </div>
               </CardHeader>
               <CardContent className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Tiếng Việt 🇻🇳</Label>
+                  <Label>Tiếng Việt 🇻🇳 (Nguồn)</Label>
                   <Input
                     value={settings.placeholder_vi}
                     onChange={(e) => setSettings({ ...settings, placeholder_vi: e.target.value })}
@@ -333,14 +374,23 @@ const ChatbotSettingsPage = () => {
                       <span className="font-medium text-sm text-muted-foreground">
                         Hành động #{index + 1}
                       </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => removeQuickAction(index)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <AutoTranslateButton
+                          sourceText={action.label_vi}
+                          size="sm"
+                          onTranslated={(translations) => {
+                            updateQuickAction(index, "label_en", translations.en || action.label_en);
+                          }}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => removeQuickAction(index)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-3 gap-3">
@@ -368,14 +418,14 @@ const ChatbotSettingsPage = () => {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs">Nhãn (VI)</Label>
+                        <Label className="text-xs">Nhãn (VI) 🇻🇳</Label>
                         <Input
                           value={action.label_vi}
                           onChange={(e) => updateQuickAction(index, "label_vi", e.target.value)}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs">Nhãn (EN)</Label>
+                        <Label className="text-xs">Nhãn (EN) 🇬🇧</Label>
                         <Input
                           value={action.label_en}
                           onChange={(e) => updateQuickAction(index, "label_en", e.target.value)}
