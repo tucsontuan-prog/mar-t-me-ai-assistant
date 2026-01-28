@@ -95,43 +95,53 @@ const Index = () => {
                   }
                 </p>
 
-                {/* Customer-focused features */}
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  {heroSettings?.features.map((feature) => (
-                    <div key={feature.id} className="flex items-center gap-3">
+                {/* Customer-focused features - optimized grid for 5 items */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4">
+                  {heroSettings?.features.map((feature, index) => (
+                    <div 
+                      key={feature.id} 
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 animate-fade-in"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
                       <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                         {getIconComponent(feature.icon)}
                       </div>
-                      <span className="text-sm">
+                      <span className="text-xs text-center leading-tight">
                         {language === "vi" ? feature.text_vi : feature.text_en}
                       </span>
                     </div>
                   ))}
                   {!heroSettings && (
                     <>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm">
                         <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                           <MessageCircle className="w-5 h-5 text-ocean-teal" />
                         </div>
-                        <span className="text-sm">{t("hero.feature1")}</span>
+                        <span className="text-xs text-center">{t("hero.feature1")}</span>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm">
                         <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                           <Clock className="w-5 h-5 text-ocean-teal" />
                         </div>
-                        <span className="text-sm">{t("hero.feature2")}</span>
+                        <span className="text-xs text-center">{t("hero.feature2")}</span>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm">
                         <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                           <Ship className="w-5 h-5 text-ocean-teal" />
                         </div>
-                        <span className="text-sm">{t("hero.feature3")}</span>
+                        <span className="text-xs text-center">{t("hero.feature3")}</span>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm">
                         <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                           <Container className="w-5 h-5 text-ocean-teal" />
                         </div>
-                        <span className="text-sm">{t("hero.feature4")}</span>
+                        <span className="text-xs text-center">{t("hero.feature4")}</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 backdrop-blur-sm">
+                        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                          <Globe className="w-5 h-5 text-ocean-teal" />
+                        </div>
+                        <span className="text-xs text-center">{t("hero.feature5")}</span>
                       </div>
                     </>
                   )}
