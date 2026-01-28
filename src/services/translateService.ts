@@ -1,30 +1,48 @@
-const TRANSLATE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/translate`;
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from "firebase/app";
 
 export interface TranslationResult {
   translations: Record<string, string>;
   original: string;
 }
 
+interface TranslateRequest {
+  text: string;
+  targetLanguages: string[];
+  sourceLanguage: string;
+}
+
+// Initialize Firebase Functions
+const functions = getFunctions(getApp());
+const translateWithGemini = httpsCallable<TranslateRequest, TranslationResult>(
+  functions,
+  "translateWithGemini"
+);
+
 export const translateText = async (
   text: string,
   targetLanguages: string[] = ["en", "zh", "ko", "ja"],
   sourceLanguage: string = "vi"
 ): Promise<TranslationResult> => {
-  const response = await fetch(TRANSLATE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-    },
-    body: JSON.stringify({ text, targetLanguages, sourceLanguage }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Translation failed");
+  try {
+    const result = await translateWithGemini({
+      text,
+      targetLanguages,
+      sourceLanguage,
+    });
+    return result.data;
+  } catch (error: any) {
+    console.error("Translation error:", error);
+    
+    if (error.code === "functions/unauthenticated") {
+      throw new Error("Vui lòng đăng nhập để sử dụng tính năng dịch.");
+    }
+    if (error.code === "functions/unavailable") {
+      throw new Error("Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.");
+    }
+    
+    throw new Error("Không thể dịch. Vui lòng thử lại.");
   }
-
-  return response.json();
 };
 
 // Batch translate multiple fields at once
