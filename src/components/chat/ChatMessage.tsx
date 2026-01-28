@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Bot, User } from "lucide-react";
+import { Ship, User } from "lucide-react";
 
 interface ChatMessageProps {
   message: string;
@@ -24,7 +24,7 @@ export const ChatMessage = ({ message, isBot, timestamp }: ChatMessageProps) => 
             : "bg-ocean-deep text-white"
         )}
       >
-        {isBot ? <Bot className="w-5 h-5" /> : <User className="w-5 h-5" />}
+        {isBot ? <Ship className="w-5 h-5" /> : <User className="w-5 h-5" />}
       </div>
 
       {/* Message bubble */}
