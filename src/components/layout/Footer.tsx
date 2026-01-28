@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, Globe, MapPin, Users, Eye } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Footer = () => {
+  const { t } = useLanguage();
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
 
   useEffect(() => {
-    // Simulate real-time online users (replace with actual API/Firebase)
     const randomOnline = Math.floor(Math.random() * 50) + 10;
     setOnlineUsers(randomOnline);
 
-    // Simulate total visits (replace with actual database counter)
     const storedVisits = localStorage.getItem("haian_total_visits");
     const visits = storedVisits ? parseInt(storedVisits) + 1 : 1234567;
     localStorage.setItem("haian_total_visits", visits.toString());
     setTotalVisits(visits);
 
-    // Update online users periodically
     const interval = setInterval(() => {
       setOnlineUsers((prev) => {
         const change = Math.floor(Math.random() * 5) - 2;
@@ -57,7 +56,7 @@ const Footer = () => {
           {/* Block B: Contact Details */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-ocean-teal mb-4">
-              Thông tin liên hệ
+              {t("footer.contact")}
             </h3>
 
             <div className="space-y-3">
@@ -106,7 +105,7 @@ const Footer = () => {
           {/* Block C: Traffic Statistics */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-ocean-teal mb-4">
-              Thống kê truy cập
+              {t("footer.stats")}
             </h3>
 
             <div className="space-y-4">
@@ -116,7 +115,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-xs text-white/60 uppercase tracking-wide">
-                    Đang trực tuyến
+                    {t("footer.online")}
                   </p>
                   <p className="text-xl font-bold text-green-400">
                     {formatNumber(onlineUsers)}
@@ -130,7 +129,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-xs text-white/60 uppercase tracking-wide">
-                    Tổng lượt truy cập
+                    {t("footer.totalVisits")}
                   </p>
                   <p className="text-xl font-bold text-ocean-teal">
                     {formatNumber(totalVisits)}
@@ -147,9 +146,9 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-sm text-white/60">
             <div className="flex flex-col md:flex-row items-center gap-2">
-              <span>© 2026 HAIAN TS. All rights reserved.</span>
+              <span>{t("footer.copyright")}</span>
               <span className="hidden md:inline">|</span>
-              <span>Developed by HATS IT Department</span>
+              <span>{t("footer.developer")}</span>
             </div>
             {/* Subtle admin login link */}
             <Link
