@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useScrollAnimation, useParallax } from "@/hooks/useScrollAnimation";
 import { getHeroSettings, HeroSettings } from "@/services/heroSettingsService";
+import { getLandingSettings, LandingSettings } from "@/services/landingSettingsService";
 import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
 import * as Icons from "lucide-react";
 
@@ -15,6 +16,7 @@ const Index = () => {
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const [heroSettings, setHeroSettings] = useState<HeroSettings | null>(null);
+  const [landingSettings, setLandingSettings] = useState<LandingSettings | null>(null);
   
   // Parallax effect for hero background
   const parallaxOffset = useParallax(0.3);
@@ -24,16 +26,21 @@ const Index = () => {
   const [ctaRef, ctaVisible] = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
 
   useEffect(() => {
-    const loadHeroSettings = async () => {
-      const data = await getHeroSettings();
-      setHeroSettings(data);
+    const loadSettings = async () => {
+      const [heroData, landingData] = await Promise.all([
+        getHeroSettings(),
+        getLandingSettings(),
+      ]);
+      setHeroSettings(heroData);
+      setLandingSettings(landingData);
     };
-    loadHeroSettings();
+    loadSettings();
   }, []);
 
-  const getIconComponent = (iconName: string) => {
+  const getIconComponent = (iconName: string, size: "sm" | "lg" = "sm") => {
     const IconComp = (Icons as any)[iconName];
-    return IconComp ? <IconComp className="w-5 h-5 text-ocean-teal" /> : <MessageCircle className="w-5 h-5 text-ocean-teal" />;
+    const className = size === "lg" ? "w-8 h-8 text-ocean-teal" : "w-5 h-5 text-ocean-teal";
+    return IconComp ? <IconComp className={className} /> : <MessageCircle className={className} />;
   };
 
   return (
@@ -213,73 +220,87 @@ const Index = () => {
               }`}
             >
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                {t("services.title")}
+                {landingSettings 
+                  ? (language === "vi" ? landingSettings.services.title_vi : landingSettings.services.title_en)
+                  : t("services.title")
+                }
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                {t("services.description")}
+                {landingSettings 
+                  ? (language === "vi" ? landingSettings.services.description_vi : landingSettings.services.description_en)
+                  : t("services.description")
+                }
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Service 1 */}
-              <article 
-                className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
-                  servicesVisible 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: '100ms' }}
-              >
-                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
-                  <Ship className="w-8 h-8 text-ocean-teal" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {t("services.schedule.title")}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {t("services.schedule.desc")}
-                </p>
-              </article>
-
-              {/* Service 2 */}
-              <article 
-                className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
-                  servicesVisible 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: '200ms' }}
-              >
-                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
-                  <Container className="w-8 h-8 text-ocean-teal" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {t("services.container.title")}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {t("services.container.desc")}
-                </p>
-              </article>
-
-              {/* Service 3 */}
-              <article 
-                className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
-                  servicesVisible 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: '300ms' }}
-              >
-                <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
-                  <Headphones className="w-8 h-8 text-ocean-teal" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {t("services.support.title")}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {t("services.support.desc")}
-                </p>
-              </article>
+            <div className={`grid gap-8 ${
+              landingSettings && landingSettings.services.cards.length > 3 
+                ? 'md:grid-cols-2 lg:grid-cols-3' 
+                : 'md:grid-cols-3'
+            }`}>
+              {landingSettings?.services.cards.map((card, index) => (
+                <article 
+                  key={card.id}
+                  className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
+                    servicesVisible 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                    {getIconComponent(card.icon, "lg")}
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {language === "vi" ? card.title_vi : card.title_en}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {language === "vi" ? card.description_vi : card.description_en}
+                  </p>
+                </article>
+              ))}
+              
+              {/* Fallback if no settings loaded */}
+              {!landingSettings && (
+                <>
+                  <article 
+                    className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
+                      servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: '100ms' }}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                      <Ship className="w-8 h-8 text-ocean-teal" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t("services.schedule.title")}</h3>
+                    <p className="text-muted-foreground text-sm">{t("services.schedule.desc")}</p>
+                  </article>
+                  <article 
+                    className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
+                      servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: '200ms' }}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                      <Container className="w-8 h-8 text-ocean-teal" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t("services.container.title")}</h3>
+                    <p className="text-muted-foreground text-sm">{t("services.container.desc")}</p>
+                  </article>
+                  <article 
+                    className={`p-6 rounded-xl bg-card border border-border shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-500 text-center ${
+                      servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: '300ms' }}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-ocean-foam flex items-center justify-center mb-4 mx-auto">
+                      <Headphones className="w-8 h-8 text-ocean-teal" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t("services.support.title")}</h3>
+                    <p className="text-muted-foreground text-sm">{t("services.support.desc")}</p>
+                  </article>
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -301,14 +322,25 @@ const Index = () => {
                 <MessageCircle className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                {t("cta.title")}
+                {landingSettings 
+                  ? (language === "vi" ? landingSettings.cta.title_vi : landingSettings.cta.title_en)
+                  : t("cta.title")
+                }
               </h2>
               <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-                {t("cta.description")}
+                {landingSettings 
+                  ? (language === "vi" ? landingSettings.cta.description_vi : landingSettings.cta.description_en)
+                  : t("cta.description")
+                }
               </p>
               <div className="flex items-center justify-center gap-2 text-sm text-ocean-teal">
                 <Globe className="w-4 h-4" />
-                <span>{t("cta.languages")}</span>
+                <span>
+                  {landingSettings 
+                    ? (language === "vi" ? landingSettings.cta.languagesText_vi : landingSettings.cta.languagesText_en)
+                    : t("cta.languages")
+                  }
+                </span>
               </div>
             </div>
           </div>
