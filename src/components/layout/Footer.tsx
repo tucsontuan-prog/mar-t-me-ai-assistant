@@ -144,19 +144,10 @@ const Footer = () => {
       {/* Copyright Bar */}
       <div className="bg-ocean-navy border-t border-white/10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-sm text-white/60">
-            <div className="flex flex-col md:flex-row items-center gap-2">
-              <span>{t("footer.copyright")}</span>
-              <span className="hidden md:inline">|</span>
-              <span>{t("footer.developer")}</span>
-            </div>
-            {/* Subtle admin login link */}
-            <Link
-              to="/auth"
-              className="text-white/30 hover:text-white/50 transition-colors text-xs"
-            >
-              Admin
-            </Link>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-white/60">
+            <span>{t("footer.copyright")}</span>
+            <span className="hidden md:inline">|</span>
+            <span>{t("footer.developer")}</span>
           </div>
         </div>
       </div>

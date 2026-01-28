@@ -2,10 +2,13 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
 
 const Index = () => {
+  const { user } = useAuth();
   const { t } = useLanguage();
 
   return (
@@ -15,6 +18,15 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="flex-1">
+        {/* Admin Dashboard - shown when logged in */}
+        {user && (
+          <section className="py-6 bg-muted/30 border-b border-border">
+            <div className="container mx-auto px-4">
+              <AdminDashboard />
+            </div>
+          </section>
+        )}
+
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           {/* Background gradient */}
