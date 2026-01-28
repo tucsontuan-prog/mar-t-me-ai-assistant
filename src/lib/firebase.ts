@@ -2,14 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// TODO: Replace with your Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDvcXca_FhhF29yOdg_GN0-682ZACbkebM",
+  authDomain: "chatbot-lovable.firebaseapp.com",
+  projectId: "chatbot-lovable",
+  storageBucket: "chatbot-lovable.firebasestorage.app",
+  messagingSenderId: "1006618000262",
+  appId: "1:1006618000262:web:ee01faa3b2a1db8e0c8a07",
+  measurementId: "G-HTK8WMRN2Q",
 };
 
 const app = initializeApp(firebaseConfig);
