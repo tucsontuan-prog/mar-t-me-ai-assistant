@@ -108,8 +108,8 @@ const HeroSettingsPage = () => {
   };
 
   const addFeature = () => {
-    if (!settings || settings.features.length >= 4) {
-      toast.error("Tối đa 4 tính năng");
+    if (!settings || settings.features.length >= 5) {
+      toast.error("Tối đa 5 tính năng");
       return;
     }
     const newFeature: HeroFeature = {
@@ -270,9 +270,9 @@ const HeroSettingsPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Tính năng nổi bật</CardTitle>
-                <CardDescription>Các tính năng hiển thị trong Hero section (tối đa 4)</CardDescription>
+                <CardDescription>Các tính năng hiển thị trong Hero section (tối đa 5)</CardDescription>
               </div>
-              <Button onClick={addFeature} size="sm" disabled={settings.features.length >= 4}>
+              <Button onClick={addFeature} size="sm" disabled={settings.features.length >= 5}>
                 <Plus className="w-4 h-4 mr-1" />
                 Thêm
               </Button>
