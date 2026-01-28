@@ -6,8 +6,10 @@ import { TypingIndicator } from "./TypingIndicator";
 import { QuickActions } from "./QuickActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { sendMessageToGemini } from "@/services/geminiService";
 import { saveChatMessage, getChatHistory } from "@/services/chatService";
+import { getChatbotSettings, ChatbotSettings } from "@/services/chatbotSettingsService";
 import { toast } from "sonner";
 
 interface Message {
@@ -31,30 +33,55 @@ export const ChatWindow = ({
   embedded = false,
 }: ChatWindowProps) => {
   const { user } = useAuth();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      content:
-        "Xin chào! 👋 Tôi là trợ lý ảo hỗ trợ vận tải biển. Tôi có thể giúp bạn tra cứu lịch tàu, theo dõi container, và giải đáp các thắc mắc về dịch vụ. Bạn cần hỗ trợ gì?",
-      isBot: true,
-      timestamp: new Date(),
-    },
-  ]);
+  const { language } = useLanguage();
+  const [settings, setSettings] = useState<ChatbotSettings | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Load chatbot settings
+  useEffect(() => {
+    const loadSettings = async () => {
+      const data = await getChatbotSettings();
+      setSettings(data);
+      
+      // Set initial welcome message based on language
+      const welcomeMsg = language === "vi" ? data.welcomeMessage_vi : data.welcomeMessage_en;
+      setMessages([{
+        id: "welcome",
+        content: welcomeMsg,
+        isBot: true,
+        timestamp: new Date(),
+      }]);
+    };
+    loadSettings();
+  }, []);
+
+  // Update welcome message when language changes
+  useEffect(() => {
+    if (settings && messages.length === 1 && messages[0].id === "welcome") {
+      const welcomeMsg = language === "vi" ? settings.welcomeMessage_vi : settings.welcomeMessage_en;
+      setMessages([{
+        id: "welcome",
+        content: welcomeMsg,
+        isBot: true,
+        timestamp: new Date(),
+      }]);
+    }
+  }, [language, settings]);
 
   // Load chat history when user logs in
   useEffect(() => {
     const loadHistory = async () => {
-      if (user) {
+      if (user && settings) {
         try {
           const history = await getChatHistory(user.uid);
           if (history.length > 0) {
+            const welcomeMsg = language === "vi" ? settings.welcomeMessage_vi : settings.welcomeMessage_en;
             setMessages([
               {
                 id: "welcome",
-                content:
-                  "Xin chào! 👋 Tôi là trợ lý ảo hỗ trợ vận tải biển. Tôi có thể giúp bạn tra cứu lịch tàu, theo dõi container, và giải đáp các thắc mắc về dịch vụ. Bạn cần hỗ trợ gì?",
+                content: welcomeMsg,
                 isBot: true,
                 timestamp: new Date(),
               },
@@ -67,7 +94,7 @@ export const ChatWindow = ({
       }
     };
     loadHistory();
-  }, [user]);
+  }, [user, settings, language]);
 
   // Auto scroll to bottom when new message
   useEffect(() => {
@@ -77,7 +104,6 @@ export const ChatWindow = ({
   }, [messages, isLoading]);
 
   const handleSend = async (content: string) => {
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content,
@@ -88,7 +114,6 @@ export const ChatWindow = ({
     setIsLoading(true);
 
     try {
-      // Save user message to Firestore
       if (user) {
         await saveChatMessage(user.uid, {
           content,
@@ -96,7 +121,6 @@ export const ChatWindow = ({
         });
       }
 
-      // Call Gemini via Firebase Cloud Function
       const response = await sendMessageToGemini(content);
 
       const botMessage: Message = {
@@ -107,7 +131,6 @@ export const ChatWindow = ({
       };
       setMessages((prev) => [...prev, botMessage]);
 
-      // Save bot response to Firestore
       if (user) {
         await saveChatMessage(user.uid, {
           content: response,
@@ -117,7 +140,6 @@ export const ChatWindow = ({
     } catch (error: any) {
       toast.error(error.message || "Có lỗi xảy ra");
       
-      // Fallback response
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         content:
@@ -132,6 +154,9 @@ export const ChatWindow = ({
   };
 
   const showQuickActions = messages.length <= 1;
+  const placeholder = settings 
+    ? (language === "vi" ? settings.placeholder_vi : settings.placeholder_en)
+    : "Nhập câu hỏi...";
 
   return (
     <div
@@ -141,6 +166,8 @@ export const ChatWindow = ({
     >
       {/* Header */}
       <ChatHeader
+        title={settings?.assistantName}
+        subtitle={settings ? (language === "vi" ? settings.statusText_vi : settings.statusText_en) : undefined}
         onClose={onClose}
         onMinimize={onMinimize}
         showControls={showControls}
@@ -165,10 +192,15 @@ export const ChatWindow = ({
       </ScrollArea>
 
       {/* Quick actions */}
-      {showQuickActions && <QuickActions onSelect={handleSend} />}
+      {showQuickActions && settings && (
+        <QuickActions 
+          onSelect={handleSend} 
+          actions={settings.quickActions}
+        />
+      )}
 
       {/* Input */}
-      <ChatInput onSend={handleSend} isLoading={isLoading} />
+      <ChatInput onSend={handleSend} isLoading={isLoading} placeholder={placeholder} />
     </div>
   );
 };
