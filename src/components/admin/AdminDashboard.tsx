@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChatAnalytics } from "./ChatAnalytics";
 import {
   Bot,
   Settings,
@@ -10,6 +11,9 @@ import {
   Database,
   LogOut,
   MessageSquare,
+  BarChart3,
+  Layout,
+  Code,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,9 +35,16 @@ const AdminDashboard = () => {
     {
       icon: Bot,
       title: t("admin.chatbotSettings"),
-      description: "Tin nhắn chào mừng, câu hỏi gợi ý",
+      description: "Tin nhắn, câu hỏi gợi ý, System Instruction",
       path: "/chatbot-settings",
       color: "bg-blue-500",
+    },
+    {
+      icon: Layout,
+      title: t("admin.heroSettings") || "Nội dung Hero",
+      description: "Banner và tính năng nổi bật",
+      path: "/hero-settings",
+      color: "bg-cyan-500",
     },
     {
       icon: Settings,
@@ -56,57 +67,85 @@ const AdminDashboard = () => {
       path: "/seed-data",
       color: "bg-orange-500",
     },
+    {
+      icon: Code,
+      title: t("admin.embedGuide") || "Hướng dẫn nhúng",
+      description: "Tích hợp chatbot vào website",
+      path: "/embed-guide",
+      color: "bg-indigo-500",
+    },
   ];
 
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-soft">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-ocean-teal/10 flex items-center justify-center">
-            <MessageSquare className="w-5 h-5 text-ocean-teal" />
+    <div className="space-y-6">
+      {/* Header Card */}
+      <div className="bg-card border border-border rounded-xl p-6 shadow-soft">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-ocean-teal/10 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-ocean-teal" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">
+                {t("admin.panel")}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t("admin.dashboard")}
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="gap-2 text-destructive hover:text-destructive"
+          >
+            <LogOut className="w-4 h-4" />
+            {t("admin.logout")}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {menuItems.map((item) => (
+            <Card
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className="cursor-pointer hover:shadow-medium transition-all hover:border-ocean-teal/50 group"
+            >
+              <CardHeader className="p-4 pb-2">
+                <div
+                  className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
+                >
+                  <item.icon className="w-5 h-5 text-white" />
+                </div>
+                <CardTitle className="text-sm">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <CardDescription className="text-xs">
+                  {item.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Analytics Section */}
+      <div className="bg-card border border-border rounded-xl p-6 shadow-soft">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
+            <BarChart3 className="w-5 h-5 text-purple-500" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">
-              {t("admin.panel")}
+              {t("admin.analytics.title") || "Thống kê Chat"}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {t("admin.dashboard")}
+              {t("admin.analytics.desc") || "Theo dõi hoạt động và đánh giá chatbot"}
             </p>
           </div>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleLogout}
-          className="gap-2 text-destructive hover:text-destructive"
-        >
-          <LogOut className="w-4 h-4" />
-          {t("admin.logout")}
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {menuItems.map((item) => (
-          <Card
-            key={item.path}
-            onClick={() => navigate(item.path)}
-            className="cursor-pointer hover:shadow-medium transition-all hover:border-ocean-teal/50 group"
-          >
-            <CardHeader className="p-4 pb-2">
-              <div
-                className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
-              >
-                <item.icon className="w-5 h-5 text-white" />
-              </div>
-              <CardTitle className="text-sm">{item.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <CardDescription className="text-xs">
-                {item.description}
-              </CardDescription>
-            </CardContent>
-          </Card>
-        ))}
+        <ChatAnalytics />
       </div>
     </div>
   );

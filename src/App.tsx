@@ -11,6 +11,8 @@ import SeedData from "./pages/SeedData";
 import Admin from "./pages/Admin";
 import KnowledgeDocs from "./pages/KnowledgeDocs";
 import ChatbotSettings from "./pages/ChatbotSettings";
+import HeroSettings from "./pages/HeroSettings";
+import EmbedGuide from "./pages/EmbedGuide";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/knowledge-docs" element={<KnowledgeDocs />} />
               <Route path="/chatbot-settings" element={<ChatbotSettings />} />
+              <Route path="/hero-settings" element={<HeroSettings />} />
+              <Route path="/embed-guide" element={<EmbedGuide />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

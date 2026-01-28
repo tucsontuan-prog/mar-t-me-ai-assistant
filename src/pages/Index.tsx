@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import Header from "@/components/layout/Header";
@@ -5,11 +6,27 @@ import Footer from "@/components/layout/Footer";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getHeroSettings, HeroSettings } from "@/services/heroSettingsService";
 import { Anchor, Ship, Container, Globe, Headphones, Clock, MessageCircle } from "lucide-react";
+import * as Icons from "lucide-react";
 
 const Index = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [heroSettings, setHeroSettings] = useState<HeroSettings | null>(null);
+
+  useEffect(() => {
+    const loadHeroSettings = async () => {
+      const data = await getHeroSettings();
+      setHeroSettings(data);
+    };
+    loadHeroSettings();
+  }, []);
+
+  const getIconComponent = (iconName: string) => {
+    const IconComp = (Icons as any)[iconName];
+    return IconComp ? <IconComp className="w-5 h-5 text-ocean-teal" /> : <MessageCircle className="w-5 h-5 text-ocean-teal" />;
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -51,45 +68,73 @@ const Index = () => {
                 <div className="flex items-center gap-2 text-ocean-light">
                   <Anchor className="w-5 h-5" />
                   <span className="text-sm font-medium uppercase tracking-wider">
-                    {t("hero.badge")}
+                    {heroSettings 
+                      ? (language === "vi" ? heroSettings.badge_vi : heroSettings.badge_en)
+                      : t("hero.badge")
+                    }
                   </span>
                 </div>
                 
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                  {t("hero.title")}{" "}
-                  <span className="text-ocean-teal">{t("hero.titleHighlight")}</span>
+                  {heroSettings 
+                    ? (language === "vi" ? heroSettings.title_vi : heroSettings.title_en)
+                    : t("hero.title")
+                  }{" "}
+                  <span className="text-ocean-teal">
+                    {heroSettings 
+                      ? (language === "vi" ? heroSettings.titleHighlight_vi : heroSettings.titleHighlight_en)
+                      : t("hero.titleHighlight")
+                    }
+                  </span>
                 </h1>
                 
                 <p className="text-lg text-white/80 max-w-xl">
-                  {t("hero.description")}
+                  {heroSettings 
+                    ? (language === "vi" ? heroSettings.description_vi : heroSettings.description_en)
+                    : t("hero.description")
+                  }
                 </p>
 
                 {/* Customer-focused features */}
                 <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <MessageCircle className="w-5 h-5 text-ocean-teal" />
+                  {heroSettings?.features.map((feature) => (
+                    <div key={feature.id} className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                        {getIconComponent(feature.icon)}
+                      </div>
+                      <span className="text-sm">
+                        {language === "vi" ? feature.text_vi : feature.text_en}
+                      </span>
                     </div>
-                    <span className="text-sm">{t("hero.feature1")}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-ocean-teal" />
-                    </div>
-                    <span className="text-sm">{t("hero.feature2")}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Ship className="w-5 h-5 text-ocean-teal" />
-                    </div>
-                    <span className="text-sm">{t("hero.feature3")}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Container className="w-5 h-5 text-ocean-teal" />
-                    </div>
-                    <span className="text-sm">{t("hero.feature4")}</span>
-                  </div>
+                  ))}
+                  {!heroSettings && (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                          <MessageCircle className="w-5 h-5 text-ocean-teal" />
+                        </div>
+                        <span className="text-sm">{t("hero.feature1")}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                          <Clock className="w-5 h-5 text-ocean-teal" />
+                        </div>
+                        <span className="text-sm">{t("hero.feature2")}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                          <Ship className="w-5 h-5 text-ocean-teal" />
+                        </div>
+                        <span className="text-sm">{t("hero.feature3")}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                          <Container className="w-5 h-5 text-ocean-teal" />
+                        </div>
+                        <span className="text-sm">{t("hero.feature4")}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
