@@ -10,6 +10,9 @@ export interface QuickAction {
 }
 
 export interface ChatbotSettings {
+  // System instruction for AI
+  systemInstruction: string;
+  
   // Welcome message
   welcomeMessage_vi: string;
   welcomeMessage_en: string;
@@ -28,6 +31,10 @@ export interface ChatbotSettings {
 }
 
 const DEFAULT_SETTINGS: ChatbotSettings = {
+  systemInstruction: `Bạn là trợ lý ảo của Công ty cổ phần Vận tải và Xếp dỡ Hải An (HAIAN). 
+Nhiệm vụ của bạn là hỗ trợ khách hàng về các dịch vụ vận tải biển, tra cứu lịch tàu, theo dõi container và giải đáp thắc mắc.
+Hãy trả lời chuyên nghiệp, thân thiện và chính xác.`,
+  
   welcomeMessage_vi: "Xin chào! 👋 Tôi là trợ lý ảo hỗ trợ vận tải biển. Tôi có thể giúp bạn tra cứu lịch tàu, theo dõi container, và giải đáp các thắc mắc về dịch vụ. Bạn cần hỗ trợ gì?",
   welcomeMessage_en: "Hello! 👋 I'm a virtual assistant for maritime shipping. I can help you check vessel schedules, track containers, and answer questions about our services. How can I assist you?",
   
@@ -54,7 +61,9 @@ export const getChatbotSettings = async (): Promise<ChatbotSettings> => {
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return docSnap.data() as ChatbotSettings;
+      const data = docSnap.data() as ChatbotSettings;
+      // Merge with defaults to ensure all fields exist
+      return { ...DEFAULT_SETTINGS, ...data };
     }
     
     // Return default settings if not configured
@@ -66,8 +75,13 @@ export const getChatbotSettings = async (): Promise<ChatbotSettings> => {
 };
 
 export const saveChatbotSettings = async (settings: ChatbotSettings): Promise<void> => {
-  const docRef = doc(db, "settings", SETTINGS_DOC_ID);
-  await setDoc(docRef, settings);
+  try {
+    const docRef = doc(db, "settings", SETTINGS_DOC_ID);
+    await setDoc(docRef, settings, { merge: true });
+  } catch (error: any) {
+    console.error("Error saving chatbot settings:", error);
+    throw new Error("Không thể lưu cài đặt. Vui lòng kiểm tra quyền Firestore.");
+  }
 };
 
 export const getDefaultSettings = (): ChatbotSettings => DEFAULT_SETTINGS;

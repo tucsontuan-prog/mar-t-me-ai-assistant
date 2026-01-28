@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, Globe, MapPin, Users, Eye } from "lucide-react";
+import { Mail, Phone, Globe, MapPin, Users, Eye, LogIn, Settings } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [onlineUsers, setOnlineUsers] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
 
@@ -144,10 +147,37 @@ const Footer = () => {
       {/* Copyright Bar */}
       <div className="bg-ocean-navy border-t border-white/10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-white/60">
-            <span>{t("footer.copyright")}</span>
-            <span className="hidden md:inline">|</span>
-            <span>{t("footer.developer")}</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-white/60">
+            <div className="flex flex-col md:flex-row items-center gap-2">
+              <span>{t("footer.copyright")}</span>
+              <span className="hidden md:inline">|</span>
+              <span>{t("footer.developer")}</span>
+            </div>
+            
+            {/* Admin Login */}
+            {!user ? (
+              <Link to="/auth">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="gap-2 text-white/60 hover:text-ocean-teal hover:bg-white/10"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>{t("admin.login")}</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/admin">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="gap-2 text-ocean-teal hover:text-ocean-teal hover:bg-white/10"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>{t("admin.panel")}</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

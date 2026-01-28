@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useAuth } from "@/hooks/useAuth";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { Button } from "@/components/ui/button";
-import { LogIn } from "lucide-react";
 
 const Header = () => {
   const { t } = useLanguage();
-  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
@@ -41,16 +37,6 @@ const Header = () => {
             
             {/* Language Switcher */}
             <LanguageSwitcher />
-
-            {/* Admin Login Button - only show when not logged in */}
-            {!user && (
-              <Link to="/auth">
-                <Button variant="outline" size="sm" className="gap-2 text-sm">
-                  <LogIn className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t("admin.login")}</span>
-                </Button>
-              </Link>
-            )}
           </nav>
         </div>
       </div>
