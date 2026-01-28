@@ -13,6 +13,7 @@ import {
   MessageSquare,
   BarChart3,
   Layout,
+  LayoutGrid,
   Code,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -45,6 +46,13 @@ const AdminDashboard = () => {
       description: "Banner và tính năng nổi bật",
       path: "/hero-settings",
       color: "bg-cyan-500",
+    },
+    {
+      icon: LayoutGrid,
+      title: "Nội dung Landing",
+      description: "Services & CTA sections",
+      path: "/landing-settings",
+      color: "bg-teal-500",
     },
     {
       icon: Settings,
