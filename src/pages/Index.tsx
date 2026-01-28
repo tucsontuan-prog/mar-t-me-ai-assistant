@@ -1,11 +1,22 @@
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { ChatWindow } from "@/components/chat/ChatWindow";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { Anchor, Ship, Container, Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Top bar with user menu */}
+      <div className="absolute top-4 right-4 z-50">
+        <UserMenu />
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient */}
@@ -75,8 +86,9 @@ const Index = () => {
               <Button
                 size="lg"
                 className="mt-6 bg-ocean-teal hover:bg-ocean-teal/90 text-white gap-2"
+                onClick={() => navigate(user ? "/" : "/auth")}
               >
-                Dùng thử ngay
+                {user ? "Bắt đầu chat" : "Đăng nhập để dùng thử"}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
