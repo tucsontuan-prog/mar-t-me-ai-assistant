@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getHeroSettings, saveHeroSettings, HeroSettings as HeroSettingsType, HeroFeature } from "@/services/heroSettingsService";
 import { AutoTranslateButton } from "@/components/admin/AutoTranslateButton";
+import { HeroPreview } from "@/components/admin/preview/HeroPreview";
+import { PreviewPanel } from "@/components/admin/preview/PreviewPanel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +33,6 @@ import {
   Zap,
   Shield,
   CheckCircle,
-  Languages,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -139,9 +140,9 @@ const HeroSettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate("/admin")}>
               <ArrowLeft className="w-5 h-5" />
@@ -165,6 +166,10 @@ const HeroSettingsPage = () => {
             )}
           </Button>
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Form Section */}
+          <div className="lg:col-span-2 space-y-6">
 
         {/* Hero Content */}
         <Card>
@@ -354,6 +359,17 @@ const HeroSettingsPage = () => {
             )}
           </CardContent>
         </Card>
+          </div>
+
+          {/* Preview Section */}
+          <div className="lg:col-span-1">
+            <PreviewPanel title="Xem trước Hero">
+              {(language: "vi" | "en") => (
+                <HeroPreview settings={settings} language={language} />
+              )}
+            </PreviewPanel>
+          </div>
+        </div>
       </div>
     </div>
   );

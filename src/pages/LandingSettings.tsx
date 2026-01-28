@@ -8,6 +8,9 @@ import {
   ServiceCard
 } from "@/services/landingSettingsService";
 import { AutoTranslateButton } from "@/components/admin/AutoTranslateButton";
+import { ServicesPreview } from "@/components/admin/preview/ServicesPreview";
+import { CTAPreview } from "@/components/admin/preview/CTAPreview";
+import { PreviewPanel } from "@/components/admin/preview/PreviewPanel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -157,9 +160,9 @@ const LandingSettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate("/admin")}>
               <ArrowLeft className="w-5 h-5" />
@@ -184,17 +187,20 @@ const LandingSettingsPage = () => {
           </Button>
         </div>
 
-        <Tabs defaultValue="services" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="services" className="gap-2">
-              <LayoutGrid className="w-4 h-4" />
-              Services Section
-            </TabsTrigger>
-            <TabsTrigger value="cta" className="gap-2">
-              <MessageSquare className="w-4 h-4" />
-              CTA Section
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Form Section */}
+          <div className="lg:col-span-2">
+            <Tabs defaultValue="services" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="services" className="gap-2">
+                  <LayoutGrid className="w-4 h-4" />
+                  Services Section
+                </TabsTrigger>
+                <TabsTrigger value="cta" className="gap-2">
+                  <MessageSquare className="w-4 h-4" />
+                  CTA Section
+                </TabsTrigger>
+              </TabsList>
 
           {/* Services Section */}
           <TabsContent value="services" className="space-y-4">
@@ -490,7 +496,23 @@ const LandingSettingsPage = () => {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+            </Tabs>
+          </div>
+
+          {/* Preview Section */}
+          <div className="lg:col-span-1 space-y-4">
+            <PreviewPanel title="Xem trước Services">
+              {(language: "vi" | "en") => (
+                <ServicesPreview settings={settings.services} language={language} />
+              )}
+            </PreviewPanel>
+            <PreviewPanel title="Xem trước CTA">
+              {(language: "vi" | "en") => (
+                <CTAPreview settings={settings.cta} language={language} />
+              )}
+            </PreviewPanel>
+          </div>
+        </div>
       </div>
     </div>
   );
